@@ -42,8 +42,17 @@ def test_sqrt():
     
     
     
-def test_calculator_expression_positif_valide():
-    assert calc.calculate("14+8") == 22 
+def test_calculator_expression_positif_simple_valide():
+    assert calc.calculate("1 4+8") == 22 
+    assert calc.calculate("1+1") == 2 
+    assert calc.calculate("7*6") == 42 
+    assert calc.calculate("7*3") == 21 
+    assert calc.calculate("24/8") == 3 
+    assert calc.calculate("24-8") == 16 
+    assert calc.calculate("54-12") == 42 
+    assert calc.calculate("-4+12") == 8 
+    
+def test_calculator_expression_positif_complexe_valide():
     assert calc.calculate("2+3*4") == 14 
     assert calc.calculate("4*3+2") == 14 
     

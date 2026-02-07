@@ -83,14 +83,48 @@ class Calculator:
         if int(b) == 0:
             raise ZeroDivisionError('b = 0')
         return int(a)%int(b) 
+    
+    
+    def convert_string_to_array_digit(self,exp: str, opperator: str) -> list[int | float]:
+        """Converti une chaine de caractère en tableau de float ou int""" 
+        # supprime les espaces entre les chiffres #mercisandra
+        exp_digit = exp[:].replace(" ", "")
+        tab_number = exp_digit.replace('+', ";").replace('-', ";").replace('*', ";").replace('/', ";")
+        return [int(element) for element in tab_number.strip(";").split(';')]
+    
+    def convert_string_to_array_operator(self,exp: str, opperator: str) -> list[int | float]:
+        """Converti une chaine de caractère en tableau d'oppérateur """ 
+        # supprime les espaces entre les chiffres #mercisandra
+        exp_op = exp[:].replace(" ", "")
+        return [element for element in exp_op if element in opperator] 
+
+        
+        
     def calculate(self, exp : str):
         op = "+-*/"
-        tab_number = exp.replace('+', ";").replace('-', ";").replace('*', ";").replace('/', ";")
-        
-        
-        return tab_number.split(";")
+        liste_digit = self.convert_string_to_array_digit(exp, op)
+        liste_opperator = self.convert_string_to_array_operator(exp, op)
+        result = 0
+        if(len(liste_digit) == len(liste_opperator) and liste_opperator[0] =="-" ):
+            liste_digit.insert(0,0)
+        for i in range(len(liste_digit)-1):
+            for opp in liste_opperator:
+                match opp:
+                    case "+":
+                        result += liste_digit[i] + liste_digit[i+1]
+                    case "-":
+                        result += liste_digit[i] - liste_digit[i+1]
 
-        # for element in op:
-        #     if element in exp:
-        #         return 
+                    case "*":
+                        result += liste_digit[i] * liste_digit[i+1]
+
+                    case "/":
+                        try:
+                            result += liste_digit[i] / liste_digit[i+1]
+                        except ZeroDivisionError:
+                            raise "Division par 0 !"
+        return result
+                    
+        
+    
         
