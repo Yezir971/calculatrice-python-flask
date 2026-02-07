@@ -98,33 +98,49 @@ class Calculator:
         exp_op = exp[:].replace(" ", "")
         return [element for element in exp_op if element in opperator] 
 
-        
-        
-    def calculate(self, exp : str):
-        op = "+-*/"
-        liste_digit = self.convert_string_to_array_digit(exp, op)
-        liste_opperator = self.convert_string_to_array_operator(exp, op)
-        result = 0
-        if(len(liste_digit) == len(liste_opperator) and liste_opperator[0] =="-" ):
-            liste_digit.insert(0,0)
-        for i in range(len(liste_digit)-1):
-            for opp in liste_opperator:
-                match opp:
-                    case "+":
-                        result += liste_digit[i] + liste_digit[i+1]
-                    case "-":
-                        result += liste_digit[i] - liste_digit[i+1]
+    def order_by_priority(self, digit, opperator):
+        for i in range(len(opperator)):
+            if opperator[i] == "*" or opperator[i] == "/":
+                digit.insert(0,digit[i] )
+                digit.insert(1,digit[i+1] )
+                opperator.insert(0, opperator[i]) 
+                del digit[i]
+                del digit[i+1]
+                del opperator[i]
+        return [digit, opperator]
+            
 
-                    case "*":
-                        result += liste_digit[i] * liste_digit[i+1]
+        
+    def calculate(self, exp: str):
+        op_symbols = "+-*/"
+        # liste_digit = self.convert_string_to_array_digit(exp, op_symbols)
+        # liste_opperator = self.convert_string_to_array_operator(exp, op_symbols)
+        liste_digit,liste_opperator = self.order_by_priority(self.convert_string_to_array_digit(exp, op_symbols),self.convert_string_to_array_operator(exp, op_symbols) )
+        
+        if len(liste_digit) == len(liste_opperator) and liste_opperator[0] == "-":
+            liste_digit.insert(0, 0)
+        
+        result = liste_digit[0]
 
-                    case "/":
-                        try:
-                            result += liste_digit[i] / liste_digit[i+1]
-                        except ZeroDivisionError:
-                            raise "Division par 0 !"
+        for i in range(len(liste_opperator)):
+            opp = liste_opperator[i]
+            next_val = liste_digit[i+1]
+            print(f"opp : {opp}")
+            print(f"next_val : {next_val}")
+
+            match opp:
+                case "+":
+                    result += next_val
+                case "-":
+                    result -= next_val
+                case "*":
+                    result *= next_val
+                case "/":
+                    if next_val == 0:
+                        raise ZeroDivisionError("Division par 0 !")
+                    result /= next_val
+                
         return result
-                    
         
     
         

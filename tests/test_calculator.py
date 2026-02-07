@@ -53,8 +53,10 @@ def test_calculator_expression_positif_simple_valide():
     assert calc.calculate("-4+12") == 8 
     
 def test_calculator_expression_positif_complexe_valide():
-    assert calc.calculate("2+3*4") == 14 
     assert calc.calculate("4*3+2") == 14 
+    assert calc.calculate("4+3*2") == 24
+    assert calc.calculate("2*3+4") == 10
+
     
 def test_calculator_expression_negatif_valide():
     assert calc.calculate("-14+8") == -6 
