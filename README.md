@@ -39,6 +39,16 @@ curl http://127.0.0.1:5000/api/multiply/4/3
 
 # Division (10 / 2)
 curl http://127.0.0.1:5000/api/divide/10/2
+
+#power 2**3
+curl http://127.0.0.1:5000/api/power/2/3
+
+#Modulo 2%6
+curl http://127.0.0.1:5000/api/modulo/2/6
+
+#Racine 4**0.5
+curl http://127.0.0.1:5000/api/racine/4
+
 ```
 
 ### Gestion des utilisateurs

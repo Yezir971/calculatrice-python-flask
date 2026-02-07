@@ -59,3 +59,38 @@ class Calculator:
         if b == 0:
             raise ZeroDivisionError("Division par zéro impossible")
         return a / b
+    def power(self, a, b):
+        """
+        Calcule a^b. Retourner 1 pour 0^0.
+        """
+        if a == 0 and b == 0:
+            return 1
+        return a**b 
+    def sqrt(self, a):
+        """
+        Racine carrée. Lever ValueError si a < 0.
+        """
+        if a < 0:
+            raise ValueError('a ne peux pas etre négatif !')
+        return a**0.5
+    def modulo(self, a, b):
+        """
+        Reste de division. Lever ZeroDivisionError si b = 0.
+        """
+        if type(a) == str or type(b) == str:
+            raise ValueError('b = 0')
+            
+        if int(b) == 0:
+            raise ZeroDivisionError('b = 0')
+        return int(a)%int(b) 
+    def calculate(self, exp : str):
+        op = "+-*/"
+        tab_number = exp.replace('+', ";").replace('-', ";").replace('*', ";").replace('/', ";")
+        
+        
+        return tab_number.split(";")
+
+        # for element in op:
+        #     if element in exp:
+        #         return 
+        

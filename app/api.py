@@ -74,6 +74,44 @@ def divide(a, b):
     except ZeroDivisionError:
         return jsonify({'error': 'Division par zéro impossible'}), 400
 
+@api_bp.route('/power/<a>/<b>', methods=['GET'])
+def power(a,b):
+    """Endpoint pour a puissance b."""
+    try : 
+        a_value = int(a)
+        b_value = int(b)
+        result = calculator.power(a_value,b_value)
+        return jsonify({'result': result})
+    except ValueError:
+        return jsonify({'error': 'Les paramètres doivent être des nombres'}), 400
+    
+@api_bp.route('/racine/<a>', methods=['GET'])
+def racine(a):
+    """Endpoint pour la racine de a"""
+    try : 
+        a_value = int(a)
+        result = calculator.sqrt(a_value)
+        return jsonify({'result': result})
+    except ValueError:
+        return jsonify({'error': 'Les paramètres doivent être des nombres'}), 400
+    except ValueError:
+        return jsonify({'error': 'a ne peux pas etre négatif !'}), 400
+@api_bp.route('/modulo/<a>/<b>', methods=['GET'])
+def modulo(a, b):
+    """Endpoint pour a modulo b"""
+    try : 
+        a_value = int(a)
+        b_value = int(b)
+        
+        result = calculator.modulo(b_value, a_value)
+        return jsonify({'result': result})
+    except ValueError:
+        return jsonify({'error': 'Les paramètres doivent être des nombres'}), 400
+    except ZeroDivisionError:
+        return jsonify({'error': 'b = 0'}), 400
+        
+
+
 # Le reste du code reste inchangé
 @api_bp.route('/user', methods=['POST'])
 def add_user():
