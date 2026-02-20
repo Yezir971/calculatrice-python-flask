@@ -1,7 +1,9 @@
-class Calculator:
+from app.node import Node
+class Calculator(Node):
     """
     Une classe simple de calculatrice fournissant les opérations arithmétiques de base.
     """
+    
 
     def add(self, a, b):
         """
@@ -98,49 +100,103 @@ class Calculator:
         exp_op = exp[:].replace(" ", "")
         return [element for element in exp_op if element in opperator] 
 
-    def order_by_priority(self, digit, opperator):
-        for i in range(len(opperator)):
-            if opperator[i] == "*" or opperator[i] == "/":
-                digit.insert(0,digit[i] )
-                digit.insert(1,digit[i+1] )
-                opperator.insert(0, opperator[i]) 
-                del digit[i]
-                del digit[i+1]
-                del opperator[i]
-        return [digit, opperator]
+    # def order_by_priority(self, digit, opperator):
+    #     for i in range(len(opperator)):
+    #         if opperator[i] == "*" or opperator[i] == "/":
+    #             digit1 = digit[i]
+    #             digit2 = digit[i+1]
+    #             op = opperator[i]
+    #             del digit[i]
+    #             del digit[i+1]
+    #             del opperator[i]
+    #             opperator.insert(0, op) 
+    #             digit.insert(0,digit1)
+    #             digit.insert(1,digit2)
+    #     return [digit, opperator]
             
 
         
+    # def calculate(self, exp: str):
+    #     op_symbols = "+-*/"
+    #     # liste_digit = self.convert_string_to_array_digit(exp, op_symbols)
+    #     # liste_opperator = self.convert_string_to_array_operator(exp, op_symbols)
+    #     liste_digit,liste_opperator = self.order_by_priority(self.convert_string_to_array_digit(exp, op_symbols),self.convert_string_to_array_operator(exp, op_symbols) )
+    #     if len(liste_digit) < len(liste_opperator):
+    #         return "Il manque un chiffre"
+    #     if(len(liste_digit) == len(liste_opperator) and liste_opperator[0] == "-"):
+    #         liste_digit.insert(0, 0)
+    #     result = liste_digit[0]
+    #     print(liste_digit, liste_opperator)
+    #     print(len(liste_opperator))
+
+    #     for i in range(len(liste_opperator)):
+
+    #         opp = liste_opperator[i]
+    #         next_val = liste_digit[i+1]
+
+    #         match opp:
+    #             case "+":
+    #                 result += next_val
+    #             case "-":
+    #                 result -= next_val
+    #             case "*":
+    #                 result *= next_val
+    #             case "/":
+    #                 if next_val == 0:
+    #                     raise ZeroDivisionError("Division par 0 !")
+    #                 result /= next_val
+    #     print(result)  
+    #     return result
+    def build_tree(self, digits, operators):
+        # S'il n'y a plus d'opérateurs, c'est juste un nombre (une feuille)
+        if not operators:
+            return Node(digits[0])
+
+        # On cherche l'opérateur le MOINS prioritaire en partant de la droite
+        # car dans 10 - 5 + 2, le '+' est fait après le '-'
+        index_to_split = -1
+        
+        # 1. On cherche d'abord + ou - (priorité basse)
+        for i in range(len(operators) - 1, -1, -1):
+            if operators[i] in "+-":
+                index_to_split = i
+                break
+                
+        # 2. Si on n'a pas trouvé, on cherche * ou /
+        if index_to_split == -1:
+            for i in range(len(operators) - 1, -1, -1):
+                if operators[i] in "*/":
+                    index_to_split = i
+                    break
+
+        # On crée le nœud avec l'opérateur trouvé
+        op = operators[index_to_split]
+        
+        # On sépare les listes en deux pour la gauche et la droite
+        left_digits = digits[:index_to_split + 1]
+        left_ops = operators[:index_to_split]
+        
+        right_digits = digits[index_to_split + 1:]
+        right_ops = operators[index_to_split + 1:]
+
+        return Node(
+            value=op,
+            left=self.build_tree(left_digits, left_ops),
+            right=self.build_tree(right_digits, right_ops)
+        )
+        
     def calculate(self, exp: str):
         op_symbols = "+-*/"
-        # liste_digit = self.convert_string_to_array_digit(exp, op_symbols)
-        # liste_opperator = self.convert_string_to_array_operator(exp, op_symbols)
-        liste_digit,liste_opperator = self.order_by_priority(self.convert_string_to_array_digit(exp, op_symbols),self.convert_string_to_array_operator(exp, op_symbols) )
+        # Tes fonctions actuelles
+        digits = self.convert_string_to_array_digit(exp, op_symbols)
+        operators = self.convert_string_to_array_operator(exp, op_symbols)
         
-        if len(liste_digit) == len(liste_opperator) and liste_opperator[0] == "-":
-            liste_digit.insert(0, 0)
+        # Construction de l'arbre
+        root_node = self.build_tree(digits, operators)
         
-        result = liste_digit[0]
-
-        for i in range(len(liste_opperator)):
-            opp = liste_opperator[i]
-            next_val = liste_digit[i+1]
-            print(f"opp : {opp}")
-            print(f"next_val : {next_val}")
-
-            match opp:
-                case "+":
-                    result += next_val
-                case "-":
-                    result -= next_val
-                case "*":
-                    result *= next_val
-                case "/":
-                    if next_val == 0:
-                        raise ZeroDivisionError("Division par 0 !")
-                    result /= next_val
-                
+        # Évaluation récursive
+        result = root_node.evaluate()
+        print(f"Calcul pour '{exp}' terminé.")
         return result
-        
     
         
