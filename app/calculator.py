@@ -186,10 +186,16 @@ class Calculator(Node):
         )
         
     def calculate(self, exp: str):
+        
         op_symbols = "+-*/"
+            
         # Tes fonctions actuelles
         digits = self.convert_string_to_array_digit(exp, op_symbols)
         operators = self.convert_string_to_array_operator(exp, op_symbols)
+        if len(digits) == 1 :
+            raise ValueError('Erreur de logique !')
+        if(len(operators) == len(digits) and operators[0] == "-"):
+            digits.insert(0, 0)
         
         # Construction de l'arbre
         root_node = self.build_tree(digits, operators)

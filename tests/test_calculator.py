@@ -54,9 +54,9 @@ def test_calculator_expression_positif_simple_valide():
     
 def test_calculator_expression_positif_complexe_valide():
     assert calc.calculate("4*3+2") == 14 
-    assert calc.calculate("2+3*4*5") == 52
-    assert calc.calculate("4+3*2") == 24
-    assert calc.calculate("2*3+4") == 10
+    assert calc.calculate("2+3*4*5") == 62
+    assert calc.calculate("4+3*2") == 10
+    assert calc.calculate("2+3*4") == 14
 
     
 def test_calculator_expression_negatif_valide():
@@ -70,9 +70,10 @@ def test_calculator_expression_double_opperator():
         
 def test_calculator_expression_space():
     assert calc.calculate(" 4 * 3 + 2 ") == 14 
-    assert calc.calculate("14+ ") == "Il manque un chiffre" 
-    with pytest.raises(ValueError):
-        assert calc.calculate(" 1 4 + ") == "Expression invalide" 
+    with pytest.raises(ValueError,match="Erreur de logique !"):
+        assert calc.calculate("14+ ") 
+        assert calc.calculate(" 1 4 + ")
+    
 
     
     
